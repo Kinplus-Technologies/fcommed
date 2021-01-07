@@ -1,0 +1,30 @@
+{
+  "short_name": "CommHealth",
+  "name": "CommHealth CBT",
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#5f45bb",
+  "description": "FETHI Community Medicine portal",
+  "icons": [{
+      "src": "_images/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "_images/logo144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "_images/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "_images/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

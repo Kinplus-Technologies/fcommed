@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="FETHI Community Medicine portal">
+  <meta name="author" content="Departments of Community Medicine">
+  <link rel="icon" href="./_images/favicon.ico">
+  <link rel="apple-touch-icon" href="_images/logo192.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+  <link href="./_css/main.css" rel="stylesheet">
+
+  <title>>FETHI Community Medicine</title>
+</head>
+
+<body>
+  <div id="app" class="position-relative">
+    <b-overlay :show="loading" bg-color="black" opacity="0.85" spinner-variant="success" blur="none">
+      <template #overlay>        
+        <h5 class="text-success">Please wait. Processing... <b-spinner variant="success" label="processing"></b-spinner></h5>
+      </template>
+      <router-view></router-view>
+    </b-overlay>
+  </div>
+
+  <noscript>      
+    <p>
+      JavaScript is Disable, Please enable JavaScript as some features my not
+      work effectively
+    </p>
+  </noscript>
+  <!-- Load polyfills to support older browsers -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1" crossorigin="anonymous"></script>
+
+  <script>
+    // Load and Register Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("service-worker.js");
+      });
+    }
+  </script>
+
+  <!-- Load Vue followed by BootstrapVue -->
+  <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+  <script src="https://unpkg.com/vuex"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/portal-vue"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+  <!-- Load the following for BootstrapVueIcons support -->
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+
+  <!-- Local Scripts -->
+  <script src="_scripts/dataurl.js"></script>
+  <script src="_scripts/jspdf.min.js"></script>
+  <script src="_scripts/store.js"></script>
+  <script src="_scripts/component-declaration.js"></script>
+
+  <script>
+    // Routes
+    const routes = [{
+      path: '/login',
+      component: LoginPage
+    }, {
+      path: '/user',
+      component: UserPage,
+      children: [{
+        path: '',
+        component: UserDashboard
+      }, {
+        path: 't/:qtype',
+        component: TestPage,
+      }, {
+        path: 'r',
+        component: ResultPage,
+      }, {
+        path: 'a/:qtype',
+        component: ResultAnalysis,
+      }, ]
+    }, {
+      path: '/admin',
+      component: AdminPage,
+      children: [{
+        path: '',
+        component: AdminDashboard
+      }, {
+        path: 'u/:utype',
+        component: UserSettings,
+      }, {
+        path: 'q/:qtype',
+        component: QuestionSettings,
+      }, {
+        path: 's/:stype',
+        component: SetupSettings,
+      }, {
+        path: 'r/:rtype',
+        component: ResultSettings,
+      }, {
+        path: 'i',
+        component: InstructionSettings,
+      }, {
+        path: 'm',
+        component: MigrateQuestion,
+      }, {
+        path: 'dataurl',
+        component: ConvertDataurl,
+      }, ]
+    }, {
+      path: '*',
+      component: Page404,
+    }, ]
+
+    // Initialize Router
+    const router = new VueRouter({
+      routes
+    })
+
+    Vue.component('password-input', PasswordInput);
+    Vue.component('mini-profile', MiniProfile);
+    Vue.component('main-banner', MainBanner);
+    Vue.component('main-footer', MainFooter);
+    Vue.component('show-alert', ShowAlert);
+    Vue.component('user-dashboard', UserDashboard);
+    Vue.component('test-page', TestPage);
+    Vue.component('result-page', ResultPage);
+    Vue.component('result-analysis', ResultAnalysis);
+    Vue.component('user-page', UserPage);
+    Vue.component('admin-page', AdminPage);
+    Vue.component('admin-dashboard', AdminDashboard);
+    Vue.component('user-settings', UserSettings);
+    Vue.component('question-settings', QuestionSettings);
+    Vue.component('setup-settings', SetupSettings);
+    Vue.component('result-settings', ResultSettings);
+    Vue.component('instruction-settings', InstructionSettings);
+    Vue.component('login-page', LoginPage);
+    Vue.component('page-404', Page404);
+    Vue.component('convert-dataurl', ConvertDataurl);
+
+    const App = new Vue({
+      el: '#app',
+      store,
+      router,
+      computed: {
+        ...mapState(['loading', 'login', 'curUser'])
+      },
+      created() {
+        axios.get('_api/departments.php')
+          .then(res => store.dispatch('setDepartment', res.data[0]))
+          .catch(err => console.error(err))
+      },
+      mounted() {
+        router.push('/login');
+      },
+    })
+  </script>
+</body>
+
+</html>
