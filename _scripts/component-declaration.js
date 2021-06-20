@@ -813,25 +813,28 @@ const UserDashboard = {
   // global component
   template: `
 		<div>
-			<div v-if="allTestTaken" class="py-2 mt-2 rounded shadow-sm bg-white font-weight-bold">				
-				<h5 class="text-success">All {{ category }} Completed</h5>  
-				<b-link to="/user/r" v-if="userSeeResult">Check Result</b-link>
-			</div>
-			<div v-else>
-				<div>
-					<h5><b-link v-b-toggle.gen-instruction>Instruction <b-icon icon="caret-down-fill" size="sm"></b-icon></b-link></h5>
-					<b-collapse visible id="gen-instruction">													
-						<p><b-alert variant="primary" show>{{ genInstruction}} </b-alert></p>		
-					</b-collapse>
-				</div>
-				<user-setup v-for="s in setup" :key="s.setup_id" :s="s" :user-id="userId"></user-setup>
-			</div>		
+			<div v-if="activeUser">
+        <div v-if="allTestTaken" class="py-2 mt-2 rounded shadow-sm bg-white font-weight-bold">				
+          <h5 class="text-success">All {{ category }} Completed</h5>  
+          <b-link to="/user/r" v-if="userSeeResult">Check Result</b-link>
+        </div>
+        <div v-else>
+          <div>
+            <h5><b-link v-b-toggle.gen-instruction>Instruction <b-icon icon="caret-down-fill" size="sm"></b-icon></b-link></h5>
+            <b-collapse visible id="gen-instruction">													
+              <p><b-alert variant="primary" show>{{ genInstruction}} </b-alert></p>		
+            </b-collapse>
+          </div>
+          <user-setup v-for="s in setup" :key="s.setup_id" :s="s" :user-id="userId"></user-setup>
+        </div>		
+      </div>
+      <h5 v-else class="text-primary">Welcome {{ fullName }}.</h5>
 		</div>        
 	`,
   components: { 'user-setup': userSetup },
   computed: {
     ...mapState(['setup', 'answersBop', 'answersTof', 'answersPic']),
-    ...mapGetters(['userId', 'userSeeResult', 'genInstruction']),
+    ...mapGetters(['userId', 'userSeeResult', 'genInstruction', 'activeUser', 'fullName']),
     category() {
       return this.setup.length > 0 ? this.setup[0].category : '';
     },
@@ -2394,7 +2397,7 @@ const AdminPage = {
 					</div>
 				</nav>
 					<div class="d-flex position-relative mt-2">
-						<side-nav :toggleVisible="toggleVisible" :toggleClick="showNav"></side-nav>
+						<side-nav v-if="activeUser" :toggleVisible="toggleVisible" :toggleClick="showNav"></side-nav>
 						<div class="main-content border-left pl-1">
 							<router-view></router-view>
 						</div>
@@ -2410,7 +2413,7 @@ const AdminPage = {
   },
   computed: {
     ...mapState(['curUser']),
-    ...mapGetters(['userId']),
+    ...mapGetters(['userId', 'activeUser']),
   },
   methods: {
     ...mapActions([

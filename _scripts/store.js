@@ -70,6 +70,7 @@ const store = new Vuex.Store({
     fullName: state => (state.curUser.user_id ? state.curUser.first_name + ' ' + state.curUser.last_name : ''),
     userId: state => state.curUser.user_id || '',
     isAdmin: state => parseInt(state.curUser.is_admin, 10) === 1,
+    activeUser: state => parseInt(state.curUser.active, 10) === 1,
     userSeeAnalysis: state => parseInt(state.instructions.user_see_analysis, 10) === 1,
     userSeeResult: state => parseInt(state.instructions.user_see_result, 10) === 1,
     genInstruction: state => state.instructions.instruction || '',
